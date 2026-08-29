@@ -1,0 +1,74 @@
+
+Welcome to Pa11y
+
+ > Running Pa11y on URL http://localhost:5173/
+
+Results for URL: http://localhost:5173/
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 3:1, but text in this element has a contrast ratio of 2.75:1. Recommendation:  change text colour to #2b1900.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.Fail
+   ├── #main-content > main > section:nth-child(2) > div > main > div > div > h1 > span
+   └── <span class="italic font-normal text-[#b29267]">for a long time.</span>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.67:1. Recommendation:  change text colour to #af640c.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #audience-resonance > div > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(1) > div > div > div
+   └── <div class="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#D98E36]">HR &amp; company leaders</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.61:1. Recommendation:  change text colour to #128484.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #audience-resonance > div > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div > div > div
+   └── <div class="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#3EB0B0]">Individuals</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 4.05:1. Recommendation:  change text colour to #020010.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(1) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#7B71C6] opacity-80 mb-3">Specialist · Signature</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 4.21:1. Recommendation:  change background to #fff7ed.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(2) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#8E61A1] opacity-80 mb-3">Individual · Corporate</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.24:1. Recommendation:  change text colour to #110900.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(3) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#D98E36] opacity-80 mb-3">Individual · Corporate</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 4.03:1. Recommendation:  change text colour to #0c0100.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(4) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#C25953] opacity-80 mb-3">Individual</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.93:1. Recommendation:  change text colour to #000406.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(6) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#4082A8] opacity-80 mb-3">Individual · Confidential</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.02:1. Recommendation:  change text colour to #001808.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #main-content > main > section:nth-child(10) > div:nth-child(3) > div:nth-child(1)
+   └── <div class="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-600 mb-10">About Soma</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.59:1. Recommendation:  change text colour to #050300.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #root > div > footer > div:nth-child(5) > div:nth-child(1) > div:nth-child(2) > h5
+   └── <h5 class="text-[10px] font-bold text-soma-gold uppercase tracking-[0.5em] flex items-center gap-4"><span class="w-8 h-px bg-soma-g...</h5>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.59:1. Recommendation:  change text colour to #050300.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #root > div > footer > div:nth-child(5) > div:nth-child(1) > div:nth-child(3) > h5
+   └── <h5 class="text-[10px] font-bold text-soma-gold uppercase tracking-[0.5em] flex items-center gap-4"><span class="w-8 h-px bg-soma-g...</h5>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.59:1. Recommendation:  change text colour to #050300.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #root > div > footer > div:nth-child(5) > div:nth-child(1) > div:nth-child(4) > h5
+   └── <h5 class="text-[10px] font-bold text-soma-gold uppercase tracking-[0.5em] flex items-center gap-4"><span class="w-8 h-px bg-soma-g...</h5>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 2.59:1. Recommendation:  change text colour to #050300.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #root > div > footer > div:nth-child(5) > div:nth-child(1) > div:nth-child(5) > h5
+   └── <h5 class="text-[10px] font-bold text-soma-gold uppercase tracking-[0.5em] flex items-center gap-4"><span class="w-8 h-px bg-soma-g...</h5>
+
+13 Errors
+

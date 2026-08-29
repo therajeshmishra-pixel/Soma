@@ -1,0 +1,29 @@
+
+Welcome to Pa11y
+
+ > Running Pa11y on URL http://localhost:5173/
+
+Results for URL: http://localhost:5173/
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 4.05:1. Recommendation:  change text colour to #020010.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(1) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#7B71C6] mb-3">Specialist · Signature</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 4.21:1. Recommendation:  change background to #fff7ed.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(2) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#8E61A1] mb-3">Individual · Corporate</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 4.03:1. Recommendation:  change text colour to #0c0100.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(4) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#C25953] mb-3">Individual</div>
+
+ • Error: This element has insufficient contrast at this conformance level. Expected a contrast ratio of at least 4.5:1, but text in this element has a contrast ratio of 3.93:1. Recommendation:  change text colour to #000406.
+   ├── WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail
+   ├── #individual-programs > div > div:nth-child(2) > div:nth-child(6) > a > div:nth-child(2) > div:nth-child(2)
+   └── <div class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#4082A8] mb-3">Individual · Confidential</div>
+
+4 Errors
+

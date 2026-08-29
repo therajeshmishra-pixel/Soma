@@ -1,0 +1,225 @@
+"use client"
+import { useEffect, useRef, useState } from "react"
+import { MeshGradient, PulsingBorder } from "@paper-design/shaders-react"
+import { motion } from "framer-motion"
+import { useNavigate } from "react-router-dom"
+
+export default function ShaderShowcase() {
+  const containerRef = useRef(null)
+  const [isActive, setIsActive] = useState(false)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const handleMouseEnter = () => setIsActive(true)
+    const handleMouseLeave = () => setIsActive(false)
+
+    const container = containerRef.current
+    if (container) {
+      container.addEventListener("mouseenter", handleMouseEnter)
+      container.addEventListener("mouseleave", handleMouseLeave)
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("mouseenter", handleMouseEnter)
+        container.removeEventListener("mouseleave", handleMouseLeave)
+      }
+    }
+  }, [])
+
+  return (
+    <div ref={containerRef} className="w-full relative overflow-hidden lg:h-[800px] h-[650px] bg-[#f8fafc]">
+      {/* Mobile/iPad Hero Image Background */}
+      <div className="absolute inset-0 lg:hidden overflow-hidden pointer-events-none">
+        <img src="/Photos/SomaN5.png" alt="Soma Mukherjee Professional Portrait" className="w-full h-full object-cover opacity-[0.15]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#f8fafc]/30 via-[#f8fafc]/80 to-[#f8fafc]" />
+      </div>
+
+      <svg className="absolute inset-0 w-0 h-0">
+        <defs>
+          <filter id="glass-effect" x="-50%" y="-50%" width="200%" height="200%">
+            <feTurbulence baseFrequency="0.005" numOctaves="1" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.3" />
+            <feColorMatrix
+              type="matrix"
+              values="1 0 0 0 0.02
+                      0 1 0 0 0.02
+                      0 0 1 0 0.05
+                      0 0 0 0.9 0"
+              result="tint"
+            />
+          </filter>
+          <filter id="text-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+      </svg>
+
+      <MeshGradient
+        className="absolute inset-0 w-full h-full opacity-80"
+        colors={["#faf9f6", "#e9e8e5", "#c1af96", "#efeeeb", "#d1e1f4"]}
+        speed={0.2}
+        backgroundColor="#f8fafc"
+      />
+      <MeshGradient
+        className="absolute inset-0 w-full h-full opacity-60"
+        colors={["#ffffff", "#f4f3f0", "#dbdad7", "#ffffff"]}
+        speed={0.15}
+        wireframe="true"
+        backgroundColor="transparent"
+      />
+
+      <main className="absolute inset-0 z-20 px-8 py-12 lg:p-16 flex items-center justify-center">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-7 text-left">
+            <motion.div
+              className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-50/50 backdrop-blur-sm mb-6 relative border border-emerald-100/50"
+              style={{
+                filter: "url(#glass-effect)",
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="absolute top-0 left-1 right-1 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent rounded-full" />
+              <span className="text-emerald-900 text-[12px] font-label uppercase tracking-widest relative z-10 font-medium">
+                ✨ Clinical Recovery Systems
+              </span>
+            </motion.div>
+
+            <motion.h1
+              className="font-headline text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-none tracking-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <span className="block font-headline text-slate-900">Your High-Performance</span>
+              <motion.span
+                className="block font-headline italic text-4xl md:text-5xl lg:text-7xl mb-2 tracking-wider bg-gradient-to-r from-[#006d36] via-[#50c878] to-[#006d36] text-transparent bg-clip-text py-2 pr-4"
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                style={{ backgroundSize: "200% auto" }}
+              >
+                Physiology, Decoded.
+              </motion.span>
+            </motion.h1>
+
+            <motion.p
+              className="font-body text-lg font-light text-slate-600 mb-8 leading-relaxed max-w-xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              25 years of restoring <span className="text-emerald-900 font-semibold">regulatory balance</span> within high-pressure intellectual environments. We move beyond generic wellness to address <span className="text-emerald-900 font-semibold">system load</span>, pain, and fatigue through <span className="text-emerald-900 font-semibold">precision physiological restoration</span>.
+            </motion.p>
+
+            <motion.div
+              className="flex items-center gap-4 flex-wrap"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+            >
+              <motion.button
+                onClick={() => navigate('/assessment')}
+                className="px-8 py-4 rounded-[24px] bg-[#006d36] text-white font-semibold text-sm transition-all duration-300 hover:bg-[#50C878] cursor-pointer shadow-md hover:shadow-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Diagnostic Assessment
+              </motion.button>
+              <motion.button
+                onClick={() => navigate('/programs')}
+                className="px-8 py-4 rounded-[24px] bg-white border border-emerald-200 text-[#006d36] font-medium text-sm transition-all duration-300 hover:bg-emerald-50 hover:border-emerald-300 cursor-pointer backdrop-blur-md shadow-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Clinical Architecture
+              </motion.button>
+            </motion.div>
+          </div>
+          
+          {/* Right side: Soma Photo */}
+          <div className="lg:col-span-5 relative hidden lg:block">
+            <motion.div 
+               className="aspect-[4/5] overflow-hidden relative"
+               style={{
+                  maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
+               }}
+               initial={{ opacity: 0, scale: 0.95, y: 20 }}
+               animate={{ opacity: 1, scale: 1, y: 0 }}
+               transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <img className="w-full h-full object-cover rounded-[24px]" alt="Soma Mukherjee Professional Portrait" src="/Photos/SomaN5.png"/>
+            </motion.div>
+            
+            {/* Decorative Element */}
+            <motion.div 
+              className="absolute -bottom-6 -left-6 w-32 h-32 bg-emerald-200/40 rounded-full blur-3xl z-[-1]"
+              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+        </div>
+      </main>
+
+      <div className="absolute top-8 right-8 lg:bottom-8 lg:top-auto z-30 hidden md:block">
+        <div className="relative w-20 h-20 flex items-center justify-center">
+          <PulsingBorder
+            colors={["#50c878", "#006d36", "#c1af96", "#00FF88", "#ffffff"]}
+            colorBack="#00000000"
+            speed={1.5}
+            roundness={1}
+            thickness={0.1}
+            softness={0.2}
+            intensity={5}
+            spotsPerColor={5}
+            spotSize={0.1}
+            pulse={0.1}
+            smoke={0.5}
+            smokeSize={4}
+            scale={0.65}
+            rotation={0}
+            frame={9161408}
+            style={{
+              width: "60px",
+              height: "60px",
+              borderRadius: "50%",
+            }}
+          />
+
+          <motion.svg
+            className="absolute inset-0 w-full h-full"
+            viewBox="0 0 100 100"
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            style={{ transform: "scale(1.6)" }}
+          >
+            <defs>
+              <path id="circle" d="M 50, 50 m -38, 0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" />
+            </defs>
+            <text className="text-[12px] fill-emerald-900/60 font-medium tracking-widest uppercase font-label">
+              <textPath href="#circle" startOffset="0%">
+                Soma Professional Recovery • Clinical Architect •
+              </textPath>
+            </text>
+          </motion.svg>
+        </div>
+      </div>
+    </div>
+  )
+}
