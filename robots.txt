@@ -1,4 +1,12 @@
+# robots.txt — Soma Mukherjee Wellness Platform
+# https://www.somamukherjee.com
+
 User-agent: *
 Allow: /
 
+# Block archived/internal pages from indexing
+Disallow: /Admin
+Disallow: /admin
+
+# Sitemap location
 Sitemap: https://www.somamukherjee.com/sitemap.xml

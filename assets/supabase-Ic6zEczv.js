@@ -1,0 +1,1 @@
+import{t as e}from"./supabase-plOPsEb9.js";export{e as supabase};
