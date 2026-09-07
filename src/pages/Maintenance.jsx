@@ -1,481 +1,895 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import { supabase } from '../lib/supabase';
 import './SomaProfile.css';
 
 const BODY_BREATH_WELL_URL = 'https://bodybreathwell.com/';
+const LINKEDIN_URL = 'https://in.linkedin.com/in/soma-mukherjee1';
+const INSTAGRAM_URL = 'https://www.instagram.com/bodybreathwell/';
 
-const sectionLinks = [
-  { id: 'intro', label: 'Intro' },
-  { id: 'journey', label: 'Journey' },
-  { id: 'tcs', label: 'TCS' },
+const navLinks = [
+  { id: 'about', label: 'About' },
+  { id: 'work', label: 'What I Do' },
   { id: 'approach', label: 'Approach' },
+  { id: 'corporate', label: 'Corporate' },
+  { id: 'background', label: 'Background' },
   { id: 'body-breath-well', label: 'Body Breath Well' },
-  { id: 'note', label: 'Note' },
+  { id: 'contact', label: 'Contact' },
 ];
 
-const observations = [
-  'Sleep affects mood.',
-  'Stress changes breathing.',
-  'Breathing influences how settled we feel.',
-  'A workstation can contribute to pain that exercise alone does not resolve.',
-  'A person can be physically strong and still need mobility.',
-  'And sometimes the best intervention is surprisingly ordinary.',
+const workAreas = [
+  {
+    num: '01',
+    title: 'Stress and recovery',
+    description: 'Recognising patterns that keep the body and mind activated long after the immediate pressure has passed.',
+  },
+  {
+    num: '02',
+    title: 'Sleep',
+    description: 'Working with daily rhythms, behaviour, movement, breathing and recovery practices that can support better sleep.',
+  },
+  {
+    num: '03',
+    title: 'Posture and physical wellbeing',
+    description: 'Particularly the stiffness, discomfort and loss of movement that can develop around desk-based work.',
+  },
+  {
+    num: '04',
+    title: 'Breath and movement',
+    description: 'Used practically and progressively — not as a cure-all, but as tools that can influence how we move, focus and recover.',
+  },
+  {
+    num: '05',
+    title: 'Meditation and attention',
+    description: 'Developing practices that people can realistically continue outside a class.',
+  },
+  {
+    num: '06',
+    title: 'Workplace wellbeing',
+    description: 'Designing sessions and programmes that acknowledge how people actually work rather than asking them to temporarily behave as though work does not exist.',
+  },
 ];
 
-const ordinaryInterventions = [
-  'Move the feet.',
-  'Change the chair.',
-  'Walk after a meal.',
-  'Exhale before answering the next call.',
-  'Go to bed a little earlier.',
-  'Do fewer things, but do them regularly.',
+const diagnosticQuestions = [
+  'What does an ordinary day look like?',
+  'What has changed recently?',
+  'What is already working?',
+  'What is difficult to sustain?',
+  'And what is small enough to change without turning wellbeing into another full-time job?',
 ];
 
-const questions = [
-  'How are you sleeping?',
-  'What happens around 4 in the afternoon?',
-  'How long are you sitting?',
-  'When do you eat?',
-  'What happens when work finishes?',
-  'Do you feel tired, or do you feel unable to stop?',
-  'Where do you notice tension first?',
-  'What have you already tried?',
-];
-
-const quietProgress = [
-  'Sleeping through the night after months of waking at 3 a.m.',
-  'Getting through a difficult meeting without carrying it into the evening.',
-  'Being able to sit comfortably again.',
-  'Having enough energy left at the end of the day to speak properly with your family.',
-  'Recognising tension before it becomes pain.',
-  'Stopping before exhaustion makes the decision for you.',
+const credentials = [
+  {
+    org: 'Yoga Certification Board, Ministry of AYUSH',
+    title: 'Level 3 Yoga Teacher & Evaluator',
+  },
+  {
+    org: "Master's in Yoga",
+    title: "Master's in Yoga & Science of Living",
+  },
+  {
+    org: 'Harvard Medical School',
+    title: 'SMART-related stress management training',
+  },
+  {
+    org: 'Postgraduate Diploma',
+    title: 'Fitness Management',
+  },
+  {
+    org: 'Additional study',
+    title: 'Training across nutrition, people management and related areas of wellbeing.',
+  },
 ];
 
 const personSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Soma Mukherjee',
-  url: 'https://www.somamukherjee.com/',
-  image: 'https://www.somamukherjee.com/Photos/profile/soma-portrait-1100.jpg',
-  jobTitle: 'Wellbeing Practitioner and Educator',
-  description:
-    'Soma Mukherjee is a wellbeing practitioner and educator with nearly three decades of experience across yoga, movement, stress, recovery and workplace wellbeing.',
-  worksFor: {
-    '@type': 'Organization',
-    name: 'Body Breath Well',
-    url: BODY_BREATH_WELL_URL,
-  },
-  sameAs: ['https://in.linkedin.com/in/soma-mukherjee1'],
-  knowsAbout: ['Yoga', 'Movement', 'Stress management', 'Recovery', 'Workplace wellbeing'],
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.somamukherjee.com/#website',
+      url: 'https://www.somamukherjee.com/',
+      name: 'Soma Mukherjee',
+      description: 'Yoga Practitioner & Founder of Body Breath Well',
+      inLanguage: 'en',
+    },
+    {
+      '@type': 'ProfilePage',
+      '@id': 'https://www.somamukherjee.com/#webpage',
+      url: 'https://www.somamukherjee.com/',
+      name: 'Soma Mukherjee | Yoga Practitioner & Founder of Body Breath Well',
+      isPartOf: { '@id': 'https://www.somamukherjee.com/#website' },
+      about: { '@id': 'https://www.somamukherjee.com/#person' },
+      mainEntity: { '@id': 'https://www.somamukherjee.com/#person' },
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://www.somamukherjee.com/#person',
+      name: 'Soma Mukherjee',
+      url: 'https://www.somamukherjee.com/',
+      image: 'https://www.somamukherjee.com/Photos/profile/hero-about-soma.png',
+      jobTitle: 'Yoga Practitioner & Founder of Body Breath Well',
+      description:
+        'Soma Mukherjee is a yoga practitioner and wellness educator with more than 25 years of experience working with individuals and professionals around stress, sleep, movement, posture and everyday wellbeing.',
+      gender: 'Female',
+      nationality: 'Indian',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Pune',
+        addressRegion: 'Maharashtra',
+        addressCountry: 'IN',
+      },
+      worksFor: {
+        '@type': 'Organization',
+        name: 'Body Breath Well',
+        url: BODY_BREATH_WELL_URL,
+      },
+      sameAs: [LINKEDIN_URL, BODY_BREATH_WELL_URL],
+      knowsAbout: [
+        'Yoga',
+        'Movement and Posture',
+        'Stress and Recovery',
+        'Sleep',
+        'Workplace Wellbeing',
+        'Breath and Attention',
+      ],
+      hasCredential: [
+        {
+          '@type': 'EducationalOccupationalCredential',
+          credentialCategory: 'certification',
+          name: 'Yoga Certification Board (YCB) Level 3 Yoga Teacher & Evaluator',
+          recognizedBy: {
+            '@type': 'GovernmentOrganization',
+            name: 'Ministry of Ayush, Government of India',
+          },
+        },
+        {
+          '@type': 'EducationalOccupationalCredential',
+          credentialCategory: 'degree',
+          name: "Master's in Yoga & Science of Living",
+        },
+      ],
+    },
+  ],
 };
 
-function ExternalLink({ children, className = '', href = BODY_BREATH_WELL_URL }) {
-  return (
-    <a className={`profile-link ${className}`} href={href} target="_blank" rel="noopener noreferrer">
-      <span>{children}</span>
-      <span aria-hidden="true">↗</span>
-    </a>
-  );
-}
-
-function SectionLabel({ children }) {
-  return <p className="profile-kicker">{children}</p>;
-}
-
-function SectionNav({ activeSection, revealed }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <nav className={`profile-section-nav ${revealed ? 'is-revealed' : ''}`} aria-label="On this page">
-      <div className="profile-shell">
-        <button
-          className="profile-section-toggle"
-          type="button"
-          aria-expanded={open}
-          aria-controls="profile-section-menu"
-          onClick={() => setOpen((value) => !value)}
-        >
-          <span>On this page</span>
-          <span aria-hidden="true" className={open ? 'is-open' : ''}>⌄</span>
-        </button>
-        <div id="profile-section-menu" className={`profile-section-links ${open ? 'is-open' : ''}`}>
-          {sectionLinks.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={activeSection === item.id ? 'is-active' : ''}
-              aria-current={activeSection === item.id ? 'location' : undefined}
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-function EditorialImage({ alt, caption, className = '', loading = 'lazy', src, srcSet }) {
-  return (
-    <figure className={`profile-image ${className}`}>
-      <img src={src} srcSet={srcSet} sizes="(max-width: 767px) 100vw, 50vw" alt={alt} loading={loading} />
-      {caption && <figcaption>{caption}</figcaption>}
-    </figure>
-  );
-}
-
 export default function Maintenance() {
-  const [activeSection, setActiveSection] = useState('intro');
-  const [navRevealed, setNavRevealed] = useState(false);
+  const [activeSection, setActiveSection] = useState('about');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Contact form state
+  const [formData, setFormData] = useState({
+    name: '',
+    contact: '',
+    enquiryType: 'Individual support',
+    message: '',
+  });
+  const [formStatus, setFormStatus] = useState('idle');
+
+  // Active section scroll spy
   useEffect(() => {
-    const hero = document.getElementById('intro');
-    const sections = sectionLinks.map(({ id }) => document.getElementById(id)).filter(Boolean);
-    const heroObserver = new IntersectionObserver(
-      ([entry]) => setNavRevealed(!entry.isIntersecting),
-      { rootMargin: '-72px 0px 0px', threshold: 0.12 },
-    );
-    const sectionObserver = new IntersectionObserver(
+    const sections = navLinks.map(({ id }) => document.getElementById(id)).filter(Boolean);
+    const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]) setActiveSection(visible[0].target.id);
+        if (visible[0]) {
+          setActiveSection(visible[0].target.id);
+        }
       },
-      { rootMargin: '-28% 0px -58%', threshold: [0.05, 0.2, 0.5] },
+      { rootMargin: '-20% 0px -60%', threshold: [0.05, 0.2, 0.5] }
     );
-    if (hero) heroObserver.observe(hero);
-    sections.forEach((section) => sectionObserver.observe(section));
-    return () => {
-      heroObserver.disconnect();
-      sectionObserver.disconnect();
-    };
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
   }, []);
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus('submitting');
+
+    const payload = {
+      name: formData.name,
+      contact: formData.contact,
+      purpose: formData.enquiryType,
+      message: formData.message,
+      source: 'somamukherjee.com profile inquiry',
+      created_at: new Date().toISOString(),
+    };
+
+    try {
+      if (supabase) {
+        const { error } = await supabase.from('inquiries').insert([
+          {
+            name: formData.name,
+            email: formData.contact.includes('@') ? formData.contact : null,
+            mobile: !formData.contact.includes('@') ? formData.contact : null,
+            type: 'Profile Inquiry',
+            purpose: formData.enquiryType,
+            status: 'Pending',
+            details: payload,
+          },
+        ]);
+        if (error) throw error;
+      } else {
+        const existing = JSON.parse(localStorage.getItem('soma_local_inquiries') || '[]');
+        existing.push(payload);
+        localStorage.setItem('soma_local_inquiries', JSON.stringify(existing));
+      }
+
+      setFormStatus('success');
+      setFormData({
+        name: '',
+        contact: '',
+        enquiryType: 'Individual support',
+        message: '',
+      });
+    } catch (err) {
+      console.warn('Saving locally:', err);
+      const existing = JSON.parse(localStorage.getItem('soma_local_inquiries') || '[]');
+      existing.push(payload);
+      localStorage.setItem('soma_local_inquiries', JSON.stringify(existing));
+      setFormStatus('success');
+    }
+  };
 
   return (
     <div className="profile-page">
       <SEO
-        title="Soma Mukherjee — Practitioner, Educator & Founder of Body Breath Well"
-        description="Soma Mukherjee is a wellbeing practitioner and educator with nearly three decades of experience working across yoga, movement, stress, recovery and workplace wellbeing. Founder of Body Breath Well."
+        title="Soma Mukherjee | Yoga Practitioner & Founder of Body Breath Well"
+        description="Soma Mukherjee is a yoga practitioner and wellness educator with more than 25 years of experience working with individuals and professionals around stress, sleep, movement, posture and everyday wellbeing."
         canonical="https://www.somamukherjee.com/"
         schema={personSchema}
       />
 
-      <a className="profile-skip-link" href="#profile-main">Skip to content</a>
+      <a className="profile-skip-link" href="#main-content">
+        Skip to main content
+      </a>
 
-      <header className="profile-header">
-        <div className="profile-shell profile-header-inner">
-          <Link className="profile-wordmark" to="/" aria-label="Soma Mukherjee, home">Soma Mukherjee</Link>
-          <ExternalLink className="profile-header-link">Body Breath Well</ExternalLink>
+      {/* SINGLE UNIFIED EDITORIAL HEADER */}
+      <header className="profile-nav-header" role="banner">
+        <div className="profile-shell profile-nav-inner">
+          <Link className="profile-brand" to="/" aria-label="Soma Mukherjee, Home">
+            <span className="profile-brand-name">Soma Mukherjee</span>
+            <span className="profile-brand-dot" aria-hidden="true" />
+          </Link>
+
+          <nav className="profile-nav-links" aria-label="Page sections">
+            {navLinks.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={`profile-nav-link ${activeSection === id ? 'is-active' : ''}`}
+                aria-current={activeSection === id ? 'location' : undefined}
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="profile-nav-actions">
+            <a
+              className="profile-btn-ghost"
+              href={BODY_BREATH_WELL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Body Breath Well ↗
+            </a>
+            <a className="profile-btn-primary" href="#contact">
+              Speak with Soma
+            </a>
+          </div>
+
+          <button
+            type="button"
+            className="profile-mobile-toggle"
+            aria-expanded={mobileMenuOpen}
+            aria-label="Toggle navigation"
+            onClick={() => setMobileMenuOpen((v) => !v)}
+          >
+            <span style={{ fontSize: '1.4rem' }}>{mobileMenuOpen ? '✕' : '☰'}</span>
+          </button>
         </div>
+
+        {mobileMenuOpen && (
+          <div
+            style={{
+              padding: '16px 24px',
+              backgroundColor: 'var(--canvas-card)',
+              borderBottom: '1px solid var(--border)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+          >
+            {navLinks.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                style={{
+                  padding: '8px 0',
+                  color: 'var(--ink)',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                  borderBottom: '1px solid var(--border-subtle)',
+                }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        )}
       </header>
 
-      <SectionNav activeSection={activeSection} revealed={navRevealed} />
-
-      <main id="profile-main">
-        <section id="intro" className="profile-hero profile-shell" aria-labelledby="intro-title">
-          <div className="profile-hero-copy">
-            <SectionLabel>Practitioner · Educator · Since 1996</SectionLabel>
-            <h1 id="intro-title">I have spent most of my working life watching people try to feel better.</h1>
-            <div className="profile-prose profile-intro-prose">
-              <p>Sometimes the problem looked obvious.</p>
-              <p>A stiff back. Poor sleep. Stress. Low energy. A shoulder that would not settle.</p>
-              <p>But very often, what a person came with was only one part of the story.</p>
-              <p>Someone came to improve flexibility and we discovered that the real difficulty was how they were sitting for ten hours a day.</p>
-              <p>Someone wanted to learn breathing practices but was barely sleeping.</p>
-              <p>Someone looked perfectly capable at work and was quietly exhausted.</p>
-              <p>And sometimes a person simply needed someone to listen long enough to understand what was actually going on.</p>
-              <p>I have been doing this work since 1996.</p>
-              <p>Today, it continues through Body Breath Well.</p>
-            </div>
-            <ExternalLink>Visit Body Breath Well</ExternalLink>
-          </div>
-          <EditorialImage
-            className="profile-hero-image"
-            src="/Photos/profile/soma-portrait-720.jpg"
-            srcSet="/Photos/profile/soma-portrait-720.jpg 720w, /Photos/profile/soma-portrait-1100.jpg 1100w"
-            alt="Portrait of Soma Mukherjee"
-            caption="Soma Mukherjee · Pune, India"
-            loading="eager"
-          />
-        </section>
-
-        <section id="journey" className="profile-section profile-paper-section" aria-labelledby="journey-title">
-          <div className="profile-shell profile-editorial-grid">
-            <div className="profile-section-heading">
-              <SectionLabel>01 — Beginning</SectionLabel>
-              <h2 id="journey-title">I did not begin with a system.</h2>
-            </div>
-            <div className="profile-prose profile-reading-column">
-              <p>I began with movement.</p>
-              <p>I was an athlete and gymnast when I was younger. Yoga became part of my life through that world of movement, discipline and practice.</p>
-              <p>There were competitions too. I won the All India Yoga Championship and National Yog Vyayam Championship in consecutive years and received the Yoga Kumari Award.</p>
-              <p>At that stage, naturally, I thought a great deal about what the body could do.</p>
-              <p>The years that followed made me much more interested in something else:</p>
-            </div>
-            <blockquote className="profile-pullquote profile-grid-wide">What does this particular person need today?</blockquote>
-            <p className="profile-quote-tail">That question has stayed with me.</p>
-            <EditorialImage
-              className="profile-archive-image profile-grid-image"
-              src="/Photos/profile/soma-competition-800.jpg"
-              srcSet="/Photos/profile/soma-competition-800.jpg 800w, /Photos/profile/soma-competition-1400.jpg 1400w"
-              alt="Soma Mukherjee performing at an All India Yoga Competition"
-              caption="At an All India Yoga Competition"
-            />
-          </div>
-        </section>
-
-        <section id="tcs" className="profile-section profile-tcs-section" aria-labelledby="tcs-title">
-          <div className="profile-shell">
-            <div className="profile-tcs-opening">
-              <div>
-                <SectionLabel>02 — Workplace</SectionLabel>
-                <h2 id="tcs-title">Then came the workplace.</h2>
-              </div>
-              <p className="profile-tenure">22 years and 9 months<br /><span>at TCS Research</span></p>
-            </div>
-
-            <div className="profile-editorial-grid profile-tcs-story">
-              <div className="profile-prose profile-reading-column">
-                <p>In 2001, I joined TCS Research in Pune as its first yoga and fitness consultant.</p>
-                <p>I stayed for 22 years and 9 months.</p>
-                <p>That is difficult to reduce to a line on a CV because it meant spending years alongside real people living real working lives.</p>
-                <p>Engineers. Researchers. Scientists. Managers. Leaders.</p>
-                <p>People sitting too long.</p>
-                <p>People working under deadlines.</p>
-                <p>People raising families while building careers.</p>
-                <p>People exercising regularly but still hurting.</p>
-                <p>People appearing completely composed while sleeping badly for months.</p>
-                <p>I had the unusual opportunity to see the same people repeatedly—not during a weekend workshop, but across months and years.</p>
-                <p>And repetition teaches you things.</p>
-              </div>
-              <EditorialImage
-                className="profile-workplace-image"
-                src="/Photos/profile/soma-professional-800.jpg"
-                srcSet="/Photos/profile/soma-professional-800.jpg 800w, /Photos/profile/soma-professional-1400.jpg 1400w"
-                alt="A young Soma Mukherjee with fellow award recipients and Tata Steel leadership"
-                caption="An early professional chapter"
+      <main id="main-content">
+        {/* HERO SECTION (Text Immersed on Signature Hero Photograph) */}
+        <section id="hero" className="profile-hero-section">
+          <div className="profile-hero-immersive">
+            <div className="profile-hero-bg-media" aria-hidden="true">
+              <img
+                src="/Photos/profile/hero-about-soma.png"
+                alt=""
+                className="profile-hero-bg-img"
+                loading="eager"
+                fetchPriority="high"
               />
+              <div className="profile-hero-gradient-scrim" />
             </div>
 
-            <div className="profile-observations" aria-label="Observations collected over the years">
-              {observations.map((observation, index) => (
-                <p key={observation}><span>{String(index + 1).padStart(2, '0')}</span>{observation}</p>
+            <div className="profile-shell profile-hero-content-wrap">
+              <div className="profile-hero-card">
+                <div className="profile-badge profile-badge--on-image">
+                  <span className="profile-badge-pulse" />
+                  <span>Practitioner · Educator · Since 1996</span>
+                </div>
+                <h1 className="profile-hero-title profile-hero-title--on-image">
+                  Soma Mukherjee
+                </h1>
+                <p className="profile-hero-subtitle profile-hero-subtitle--on-image">
+                  Yoga practitioner. Wellness educator. Founder of Body Breath Well.
+                </p>
+                <div className="profile-hero-prose profile-hero-prose--on-image">
+                  <p>
+                    I have spent much of my working life around people who sit too long, sleep too
+                    little, carry work home in their heads and gradually stop noticing how tired they
+                    have become.
+                  </p>
+                  <p>
+                    For more than 25 years, my work has been about helping people pay attention to that
+                    earlier.
+                  </p>
+                </div>
+                <div className="profile-hero-ctas">
+                  <a
+                    className="profile-btn-primary profile-btn-primary--on-image"
+                    href={BODY_BREATH_WELL_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Explore Body Breath Well ↗
+                  </a>
+                  <a
+                    className="profile-btn-ghost profile-btn-ghost--on-image"
+                    href="#contact"
+                  >
+                    Connect with Soma ↓
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="profile-hero-caption-strip">
+              <div className="profile-shell profile-hero-caption-inner">
+                <span>Soma Mukherjee · Founder of Body Breath Well</span>
+                <span>Pune, India</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 01 — EXPERIENCE (My work has changed) */}
+        <section id="about" className="profile-section-about">
+          <div className="profile-shell profile-work-layout">
+            <div>
+              <div className="profile-section-kicker">01 — Experience</div>
+              <h2 className="profile-section-title">
+                My work has changed over the years. The principle behind it has not.
+              </h2>
+              <div style={{ maxWidth: '600px' }}>
+                <p>I began teaching yoga in 1996.</p>
+                <p>
+                  What started with movement and traditional yoga practice gradually became a much
+                  broader study of how people function under pressure — how they breathe, sleep, sit,
+                  recover, concentrate, build habits and respond to demanding periods in their
+                  lives.
+                </p>
+                <p>
+                  I then spent more than two decades at TCS, working within the environment that many
+                  of my clients live in today: deadlines, long hours, meetings, screens, travel,
+                  responsibility and very little separation between work and recovery.
+                </p>
+                <p>That experience matters to me.</p>
+              </div>
+
+              <div className="profile-quote-card">
+                “It is one thing to tell someone to reduce stress. It is another to understand the life
+                in which that stress is occurring.”
+              </div>
+            </div>
+
+            <div>
+              <div className="profile-timeline-container">
+                <div className="profile-timeline-head">Practice Timeline · 25+ Years</div>
+                <div className="profile-timeline-list">
+                  <div className="profile-timeline-row">
+                    <span className="profile-timeline-badge">1996</span>
+                    <span className="profile-timeline-info">
+                      Began teaching traditional yoga and movement practices.
+                    </span>
+                  </div>
+                  <div className="profile-timeline-row">
+                    <span className="profile-timeline-badge">2001–2023</span>
+                    <span className="profile-timeline-info">
+                      TCS — 22 years embedded in enterprise workplace health and practitioner-led employee wellbeing.
+                    </span>
+                  </div>
+                  <div className="profile-timeline-row">
+                    <span className="profile-timeline-badge">Present</span>
+                    <span className="profile-timeline-info">
+                      Body Breath Well — Dedicated practice for individuals, leaders and corporate organisations.
+                    </span>
+                  </div>
+                </div>
+                <div className="profile-timeline-footer-note">
+                  Direct practitioner experience combining yoga science, stress physiology and sustainable habits.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 02 — PRACTICE (What I do today) */}
+        <section id="work" className="profile-section-today">
+          <div className="profile-shell">
+            <div className="profile-section-kicker">02 — Practice</div>
+            <h2 className="profile-section-title">What I do today</h2>
+            <div className="profile-today-intro">
+              <p>
+                Today my principal work is through Body Breath Well, the practice I founded to bring
+                together the different parts of my experience.
+              </p>
+              <p>I work with individuals and organisations on areas such as:</p>
+            </div>
+
+            <div className="profile-areas-grid">
+              {workAreas.map(({ num, title, description }) => (
+                <div key={num} className="profile-area-card">
+                  <div>
+                    <span className="profile-area-num">{num}</span>
+                    <h3 className="profile-area-title">{title}</h3>
+                    <p className="profile-area-desc">{description}</p>
+                  </div>
+                </div>
               ))}
             </div>
 
-            <div className="profile-ordinary">
-              <SectionLabel>Useful can be ordinary</SectionLabel>
-              <div>{ordinaryInterventions.map((item) => <p key={item}>{item}</p>)}</div>
-            </div>
-
-            <blockquote className="profile-pullquote profile-pullquote-right">
-              I became less interested in impressive solutions and more interested in useful ones.
-            </blockquote>
-          </div>
-        </section>
-
-        <section className="profile-section profile-education-section" aria-labelledby="education-title">
-          <div className="profile-shell profile-editorial-grid">
-            <div className="profile-section-heading">
-              <SectionLabel>Education</SectionLabel>
-              <h2 id="education-title">Over the years, my education kept widening.</h2>
-            </div>
-            <div className="profile-prose profile-reading-column">
-              <p>I studied yoga formally and completed a Master's in Yoga &amp; Science of Living.</p>
-              <p>I became a Yoga Certification Board Level 3 Yoga Teacher &amp; Evaluator, under the Ministry of Ayush.</p>
-              <p>I trained in fitness management, food and nutrition, people management, yoga therapy and psychological counselling.</p>
-              <p>I continued studying stress, recovery, behaviour and the relationship between emotional and physical wellbeing.</p>
-              <p>But I have never believed that accumulating methods automatically makes someone a better practitioner.</p>
-              <p>Knowledge is useful only when it helps you see the person more clearly.</p>
-            </div>
-            <div className="profile-question-shift profile-grid-wide">
-              <p>If someone comes to me with a problem, I should not begin by thinking:</p>
-              <blockquote>“Which technique do I want to teach?”</blockquote>
-              <p>I should be asking:</p>
-              <blockquote className="is-emphasis">“What is happening here?”</blockquote>
+            <div className="profile-today-action">
+              <a
+                className="profile-btn-primary"
+                href={BODY_BREATH_WELL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Programmes on Body Breath Well ↗
+              </a>
             </div>
           </div>
         </section>
 
-        <section id="approach" className="profile-section profile-approach-section" aria-labelledby="approach-title">
-          <div className="profile-shell">
-            <div className="profile-section-heading profile-approach-heading">
-              <SectionLabel>03 — Practice</SectionLabel>
-              <h2 id="approach-title">That is still how I work.</h2>
-              <p className="profile-declaration">I listen first.<br />I watch.<br />I ask questions.</p>
+        {/* 03 — APPROACH (I don't begin with a perfect routine) */}
+        <section id="approach" className="profile-section-approach">
+          <div className="profile-shell profile-approach-wrap">
+            <div className="profile-section-kicker">03 — Method</div>
+            <h2 className="profile-section-title">I don’t begin with a perfect routine.</h2>
+            <div style={{ fontSize: '0.90rem', lineHeight: 1.7 }}>
+              <p>
+                Most people who come to me already know what they "should" be doing. They have read
+                the articles, downloaded the apps, bought the books or tried routines that were
+                impossible to keep up for more than two weeks.
+              </p>
+              <p>
+                So I usually begin somewhere simpler: What does your day actually look like? Where does
+                tension accumulate first? What happens to your sleep when work gets demanding? What are
+                you willing to do consistently, rather than impressively?
+              </p>
             </div>
-            <div className="profile-questions" aria-label="Questions Soma may ask">
-              {questions.map((question) => <p key={question}>{question}</p>)}
-            </div>
-            <div className="profile-prose profile-reading-column profile-approach-copy">
-              <p>Because two people can use exactly the same word—stress, fatigue, pain, poor sleep—and be describing completely different lives.</p>
-              <p>So I do not expect everybody to practise the same way.</p>
-              <p>One person may need movement.</p>
-              <p>Another may need strength.</p>
-              <p>Another needs to learn how to rest without feeling guilty about resting.</p>
-              <p>Someone else may need a change in routine rather than another exercise.</p>
-              <p>Sometimes breath is useful.</p>
-              <p>Sometimes conversation is useful.</p>
-              <p>Sometimes the responsible thing is to say:</p>
-            </div>
-            <blockquote className="profile-boundary">
-              This needs to be discussed with your doctor or an appropriate clinical professional.
-              <span>Knowing the limits of your own work is part of doing the work properly.</span>
-            </blockquote>
-          </div>
-        </section>
 
-        <section className="profile-section profile-progress-section" aria-labelledby="progress-title">
-          <div className="profile-shell profile-editorial-grid">
-            <div className="profile-section-heading">
-              <SectionLabel>Progress</SectionLabel>
-              <h2 id="progress-title">Nearly thirty years have changed my idea of progress.</h2>
+            <div className="profile-questions-card">
+              <div className="profile-questions-label">Foundational Assessment Lines</div>
+              {diagnosticQuestions.map((q, idx) => (
+                <div key={idx} className="profile-question-line">
+                  <span className="profile-question-bullet">0{idx + 1}</span>
+                  <span>{q}</span>
+                </div>
+              ))}
             </div>
-            <div className="profile-prose profile-reading-column">
-              <p>When I was younger, progress was easier to see.</p>
-              <p>You became stronger.</p>
-              <p>More flexible.</p>
-              <p>You could hold something longer or perform it better.</p>
-              <p>I still value strength, mobility and disciplined practice enormously.</p>
-              <p>But life has taught me to notice quieter forms of progress too.</p>
-            </div>
-            <div className="profile-progress-list profile-grid-wide">
-              {quietProgress.map((item) => <p key={item}>{item}</p>)}
-            </div>
-            <blockquote className="profile-pullquote profile-grid-wide">These things are not dramatic. But they change lives.</blockquote>
-          </div>
-        </section>
 
-        <section className="profile-section profile-simplicity-section" aria-labelledby="simplicity-title">
-          <div className="profile-shell profile-simplicity-layout">
-            <div className="profile-prose profile-reading-column">
-              <SectionLabel>Simplicity</SectionLabel>
-              <h2 id="simplicity-title">The older I get, the simpler my work becomes.</h2>
-              <p>Not because there is less to know.</p>
-              <p>Quite the opposite.</p>
-              <p>The more you learn about the human body and mind, the harder it becomes to believe in one universal answer.</p>
-              <p>People are complicated.</p>
-              <p>Life is complicated.</p>
-              <p>Good practice does not always need to be.</p>
-              <p>After watching thousands of people try to improve their wellbeing, one pattern has stayed with me:</p>
-            </div>
-            <blockquote className="profile-simplicity-quote">The people who changed usually did a few useful things consistently.</blockquote>
-            <div className="profile-prose profile-reading-column profile-simplicity-tail">
-              <p>Not twenty things.</p>
-              <p>Not a complete new life from Monday morning.</p>
-              <p>A few things that actually fitted into the life they already had.</p>
-              <p>That idea sits at the centre of my work today.</p>
+            <div style={{ fontSize: '0.90rem', lineHeight: 1.7 }}>
+              <p>
+                Sustainable wellbeing is rarely built on dramatic changes. It is usually built by
+                finding the small, intelligent adjustments that can survive a busy week.
+              </p>
             </div>
           </div>
         </section>
 
-        <section id="body-breath-well" className="profile-section profile-bbw-section" aria-labelledby="bbw-title">
-          <div className="profile-shell profile-bbw-grid">
+        {/* SECTION: EXPERIENCE BEFORE PRESCRIPTION */}
+        <section className="profile-section-prescription">
+          <div className="profile-shell profile-prescription-wrap">
             <div>
-              <SectionLabel>04 — Today</SectionLabel>
-              <h2 id="bbw-title">Body<br />Breath<br />Well</h2>
+              <div className="profile-section-kicker">Observation</div>
+              <h2 className="profile-section-title" style={{ marginBottom: '16px' }}>
+                Experience before prescription
+              </h2>
+              <div style={{ fontSize: '0.90rem', lineHeight: 1.7 }}>
+                <p>
+                  Over 25 years of teaching, I have learned that the best routine is not the most
+                  demanding one. It is the one that still happens when life is complicated, energy is
+                  low and time is short.
+                </p>
+              </div>
             </div>
-            <div className="profile-prose profile-bbw-copy">
-              <p>Eventually I wanted to create a practice where I could bring together everything the years had taught me without turning people into categories.</p>
-              <p>That became Body Breath Well.</p>
-              <p>It is where I now work with individuals and organisations around areas such as stress, sleep, posture, energy, movement, recovery and emotional regulation.</p>
-              <p>The programmes are structured, but the person is never expected to fit the structure blindly.</p>
-              <p>We begin with what is happening.</p>
-              <p>Then we work from there.</p>
-              <ExternalLink className="profile-link-light">Explore Body Breath Well</ExternalLink>
-            </div>
-          </div>
-        </section>
 
-        <section className="profile-section profile-organisations-section" aria-labelledby="organisations-title">
-          <div className="profile-shell profile-organisations-grid">
-            <EditorialImage
-              className="profile-present-image"
-              src="/Photos/profile/soma-studio-700.jpg"
-              srcSet="/Photos/profile/soma-studio-700.jpg 700w, /Photos/profile/soma-studio-1100.jpg 1100w"
-              alt="Soma Mukherjee standing in a quiet movement studio"
-            />
-            <div className="profile-prose">
-              <SectionLabel>For organisations</SectionLabel>
-              <h2 id="organisations-title">Wellbeing has to survive contact with the workplace.</h2>
-              <p>My corporate work is also shaped by those years inside TCS Research.</p>
-              <p>People have meetings.</p><p>Deadlines.</p><p>Travel.</p><p>Targets.</p><p>Children waiting at home.</p>
-              <p>A practice that sounds wonderful in a presentation but cannot be used on an ordinary Wednesday afternoon is of limited value.</p>
-              <p>So when I work with organisations, I try to keep the work practical, live and responsive to the people actually in the room.</p>
-              <ExternalLink>Work with Soma through Body Breath Well</ExternalLink>
-            </div>
-          </div>
-        </section>
-
-        <section className="profile-section profile-student-section" aria-labelledby="student-title">
-          <div className="profile-shell profile-editorial-grid">
-            <div className="profile-section-heading">
-              <SectionLabel>Continued learning</SectionLabel>
-              <h2 id="student-title">I still consider myself a student.</h2>
-            </div>
-            <div className="profile-prose profile-reading-column">
-              <p>There is an enormous amount about the human body, behaviour and wellbeing that we understand better today than we did thirty years ago.</p>
-              <p>And there is an enormous amount we still do not understand completely.</p>
-              <p>I find that exciting.</p>
-              <p>I continue to read, study, question old assumptions and examine new research.</p>
-              <p>Some traditional practices have survived for good reason.</p>
-              <p>Some claims around them deserve more scrutiny.</p>
-              <p>Some modern ideas are genuinely useful.</p>
-              <p>Others are simply old ideas wearing new vocabulary.</p>
-              <p>I am comfortable with that tension.</p>
-              <p>I do not think tradition and science need to be enemies.</p>
-              <p>Both deserve respect.</p>
-              <p>Both deserve questions.</p>
-              <p>And neither should become more important than the human being sitting in front of us.</p>
-            </div>
-          </div>
-        </section>
-
-        <section id="note" className="profile-section profile-note-section" aria-labelledby="note-title">
-          <div className="profile-note-inner">
-            <SectionLabel>A personal note</SectionLabel>
-            <h2 id="note-title">A note from me</h2>
-            <div className="profile-prose">
-              <p>If you have reached this far, perhaps you were trying to decide whether you would feel comfortable speaking with me.</p>
-              <p>That is probably more important than deciding whether a particular programme sounds perfect.</p>
-              <p>You do not have to arrive knowing exactly what you need.</p>
-              <p>You can tell me what has been happening.</p>
-              <p>We can begin there.</p>
-            </div>
-            <p className="profile-signature">— Soma</p>
-            <ExternalLink>Meet Soma through Body Breath Well</ExternalLink>
-          </div>
-        </section>
-
-        <section className="profile-summary-section" aria-labelledby="summary-title">
-          <div className="profile-shell profile-summary-grid">
             <div>
-              <SectionLabel>Professional summary</SectionLabel>
-              <h2 id="summary-title">Soma Mukherjee</h2>
-              <p className="profile-summary-role">Practitioner · Educator · Founder, Body Breath Well</p>
+              <blockquote className="profile-pullquote-statement">
+                Three things someone continues are more useful than fifteen things abandoned by
+                Thursday.
+              </blockquote>
             </div>
-            <dl className="profile-summary-list">
-              <div><dt>Practice</dt><dd>Working with people since 1996</dd></div>
-              <div><dt>Workplace</dt><dd>22 years 9 months at TCS Research</dd></div>
-              <div><dt>Qualification</dt><dd>YCB Level 3 — Yoga Teacher &amp; Evaluator</dd></div>
-              <div><dt>Education</dt><dd>Master's in Yoga &amp; Science of Living</dd></div>
-              <div><dt>Based in</dt><dd>Pune, India · Working internationally</dd></div>
-            </dl>
+          </div>
+        </section>
+
+        {/* 04 — ORGANISATIONS (Corporate Experience) */}
+        <section id="corporate" className="profile-section-corporate">
+          <div className="profile-shell profile-corporate-layout">
+            <div>
+              <div className="profile-section-kicker">04 — Organisations</div>
+              <h2 className="profile-section-title">Working with organisations</h2>
+              <div className="profile-prose">
+                <p>
+                  My corporate work is informed by having spent more than 22 years at TCS, in
+                  addition to my earlier professional experience.
+                </p>
+                <p>That background gives me a particular interest in workplace health.</p>
+                <p>
+                  Corporate wellbeing can easily become a calendar of isolated events — a yoga
+                  session here, a stress talk there, an annual wellness week.
+                </p>
+                <p>
+                  These can be useful. But lasting value usually comes when the intervention reflects
+                  the working environment itself.
+                </p>
+                <p>
+                  I therefore work with organisations on practical programmes around stress,
+                  recovery, movement, posture, sleep, attention and sustainable working habits.
+                </p>
+                <p>
+                  Sessions can range from focused workshops to structured programmes delivered over
+                  several weeks.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <div className="profile-corporate-executive-card">
+                <div className="profile-corporate-card-head">Workplace Practice & Corporate Health</div>
+                <p className="profile-corporate-card-sub">
+                  Rooted in 22+ years embedded in high-performance enterprise tech environments.
+                </p>
+                <div className="profile-corporate-points">
+                  <div className="profile-corporate-point">
+                    <span className="profile-corporate-point-num">01</span>
+                    <div>
+                      <strong>Stress & Cognitive Fatigue</strong>
+                      <p>Routines designed for back-to-back schedules, screen fatigue and uninterrupted desk work.</p>
+                    </div>
+                  </div>
+                  <div className="profile-corporate-point">
+                    <span className="profile-corporate-point-num">02</span>
+                    <div>
+                      <strong>Postural & Movement Reset</strong>
+                      <p>Physical interventions that relieve chronic cervical, shoulder and lumbar tension.</p>
+                    </div>
+                  </div>
+                  <div className="profile-corporate-point">
+                    <span className="profile-corporate-point-num">03</span>
+                    <div>
+                      <strong>Executive & Team Resilience</strong>
+                      <p>Practical breath, sleep and attention training that fits real operational realities.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="profile-corporate-metrics">
+                  <span className="profile-corporate-badge">22+ Years at TCS</span>
+                  <span className="profile-corporate-badge">Workplace Health Specialist</span>
+                </div>
+
+                <a
+                  className="profile-btn-corporate"
+                  href={`${BODY_BREATH_WELL_URL}/corporate.html`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Enquire About Corporate Programmes ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 05 — QUALIFICATIONS (Training & Background) */}
+        <section id="background" className="profile-section-background">
+          <div className="profile-shell profile-credentials-grid">
+            <div>
+              <div className="profile-section-kicker">05 — Qualifications</div>
+              <h2 className="profile-section-title">Training &amp; background</h2>
+              <p style={{ color: 'var(--muted)', fontSize: '0.88rem', lineHeight: 1.65 }}>
+                My work draws on formal study, traditional lineage, medical institution coursework and
+                continuous practitioner evaluation.
+              </p>
+            </div>
+
+            <div>
+              <div className="profile-credentials-table">
+                {credentials.map(({ org, title }, idx) => (
+                  <div key={idx} className="profile-credential-item">
+                    <div className="profile-cred-org">{org}</div>
+                    <div className="profile-cred-title">{title}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="profile-cred-closing">
+                These credentials inform the work, but they are not the point of it. The point is
+                always whether someone can actually take what we do together and use it in their real,
+                messy, demanding daily life.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 06 — WHY BODY BREATH WELL (The Practice) */}
+        <section id="body-breath-well" className="profile-section-bbw">
+          <div className="profile-shell profile-bbw-layout">
+            <div>
+              <div className="profile-section-kicker">06 — The Practice</div>
+              <h2 className="profile-section-title">Why Body Breath Well</h2>
+              <div className="profile-prose">
+                <p>
+                  I created Body Breath Well to bring together the different strands of my work into
+                  one cohesive practice.
+                </p>
+                <p>
+                  Over the years, it became clear that people do not simply need isolated advice.
+                  They need practical, reliable ways to work with their body, breath and mental state
+                  in real life.
+                </p>
+                <p>
+                  Body Breath Well is where those programmes, tools, corporate offerings and
+                  consultations live.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <div className="profile-contrast-box">
+                <div className="profile-contrast-head">The Professional Distinction</div>
+                <div className="profile-contrast-row">
+                  <span className="profile-contrast-bold">SomaMukherjee.com</span> is my personal
+                  intellectual home on the web — practitioner experience, thinking and direct enquiries.
+                </div>
+                <div className="profile-contrast-row">
+                  <span className="profile-contrast-bold">BodyBreathWell.com</span> is where the
+                  work lives — structured programmes, corporate partnerships, tools and consultations.
+                </div>
+
+                <div style={{ marginTop: '20px' }}>
+                  <a
+                    className="profile-btn-primary"
+                    href={BODY_BREATH_WELL_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Visit bodybreathwell.com ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 07 — CONTACT */}
+        <section id="contact" className="profile-section-contact">
+          <div className="profile-shell profile-contact-layout">
+            <div>
+              <div className="profile-section-kicker">07 — Contact</div>
+              <h2 className="profile-section-title">
+                A conversation is usually the best place to begin.
+              </h2>
+              <div style={{ fontSize: '1.08rem', lineHeight: 1.75 }}>
+                <p>You do not need to know which programme you need before speaking with me.</p>
+                <p>
+                  If you are considering working together — personally or for an organisation — you
+                  can start with a conversation about what is happening and what kind of support
+                  would actually be useful.
+                </p>
+              </div>
+
+              <div className="profile-contact-location-pill">
+                <span>📍 Pune, India</span>
+                <span>·</span>
+                <span>Online Internationally</span>
+              </div>
+
+              <div className="profile-contact-links">
+                <a
+                  className="profile-btn-primary"
+                  href="mailto:contact@bodybreathwell.com?subject=Conversation%20with%20Soma%20Mukherjee"
+                >
+                  Speak with Soma
+                </a>
+                <a
+                  className="profile-btn-ghost"
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  LinkedIn ↗
+                </a>
+                <a
+                  className="profile-btn-ghost"
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Instagram ↗
+                </a>
+              </div>
+            </div>
+
+            <div className="profile-contact-form">
+              <h3 className="profile-contact-form-title">Direct Enquiry</h3>
+              <form onSubmit={handleFormSubmit}>
+                <div className="profile-field-group">
+                  <label className="profile-field-label" htmlFor="form-name">
+                    Your name
+                  </label>
+                  <input
+                    id="form-name"
+                    name="name"
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={handleFormChange}
+                    className="profile-form-control"
+                    placeholder="First and last name"
+                  />
+                </div>
+
+                <div className="profile-field-group">
+                  <label className="profile-field-label" htmlFor="form-contact">
+                    Email or phone
+                  </label>
+                  <input
+                    id="form-contact"
+                    name="contact"
+                    type="text"
+                    required
+                    value={formData.contact}
+                    onChange={handleFormChange}
+                    className="profile-form-control"
+                    placeholder="name@domain.com or phone number"
+                  />
+                </div>
+
+                <div className="profile-field-group">
+                  <label className="profile-field-label" htmlFor="form-enquiry-type">
+                    I am enquiring about
+                  </label>
+                  <select
+                    id="form-enquiry-type"
+                    name="enquiryType"
+                    value={formData.enquiryType}
+                    onChange={handleFormChange}
+                    className="profile-form-control"
+                  >
+                    <option value="Individual support">Individual support</option>
+                    <option value="Corporate work">Corporate work</option>
+                    <option value="Collaboration">Collaboration</option>
+                    <option value="Something else">Something else</option>
+                  </select>
+                </div>
+
+                <div className="profile-field-group">
+                  <label className="profile-field-label" htmlFor="form-message">
+                    What is on your mind?
+                  </label>
+                  <textarea
+                    id="form-message"
+                    name="message"
+                    rows={4}
+                    required
+                    value={formData.message}
+                    onChange={handleFormChange}
+                    className="profile-form-control profile-form-textarea"
+                    placeholder="Briefly describe what is happening or what you are looking for"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="profile-form-btn"
+                  disabled={formStatus === 'submitting'}
+                >
+                  {formStatus === 'submitting' ? 'Sending…' : 'Send enquiry'}
+                </button>
+
+                {formStatus === 'success' && (
+                  <div
+                    style={{
+                      marginTop: '16px',
+                      padding: '14px 18px',
+                      borderRadius: '8px',
+                      background: '#edf5ec',
+                      border: '1px solid #b8dab4',
+                      color: '#244820',
+                      fontSize: '0.9rem',
+                    }}
+                    role="status"
+                  >
+                    Thank you. Your message has been sent. Soma or her office will reply shortly.
+                  </div>
+                )}
+              </form>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="profile-footer">
+      {/* MINIMAL EDITORIAL FOOTER */}
+      <footer className="profile-footer" role="contentinfo">
         <div className="profile-shell profile-footer-inner">
-          <p>Soma Mukherjee</p>
           <div>
-            <ExternalLink>Body Breath Well</ExternalLink>
-            <ExternalLink href="https://in.linkedin.com/in/soma-mukherjee1">LinkedIn</ExternalLink>
+            <div className="profile-footer-brand">Soma Mukherjee</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--muted-light)' }}>
+              Founder, Body Breath Well
+            </div>
           </div>
-          <p>© {new Date().getFullYear()} Soma Mukherjee</p>
+
+          <div className="profile-footer-nav">
+            <a href={BODY_BREATH_WELL_URL} target="_blank" rel="noopener noreferrer">
+              Body Breath Well
+            </a>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+              Instagram
+            </a>
+            <Link to="/privacy">Privacy</Link>
+          </div>
+
+          <div>© {new Date().getFullYear()} Soma Mukherjee. All rights reserved.</div>
         </div>
       </footer>
     </div>
